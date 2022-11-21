@@ -28,6 +28,10 @@ let startBtn = document.querySelector('#start'),
 
 let money, time;
 
+expensesBtn.setAttribute('disabled', true);
+optionalExpensesBtn.setAttribute('disabled', true);
+countBtn.setAttribute('disabled', true);
+
 startBtn.addEventListener('click', function(){
     time = prompt("Введите дату в формате YYYY-MM-DD", "");
     money = +prompt("Ваш бюджет на месяц?", "");
@@ -35,6 +39,9 @@ startBtn.addEventListener('click', function(){
     while(isNaN(money) || money == '' || money == null) {
         money = +prompt("Ваш бюджет на месяц?", "");
     }
+    expensesBtn.removeAttribute('disabled');
+    optionalExpensesBtn.removeAttribute('disabled');
+    countBtn.removeAttribute('disabled');
     appData.budget = money;
     appData.timeData = time;
     budgetValue.textContent = money.toFixed();
@@ -51,11 +58,9 @@ expensesBtn.addEventListener('click', function(){
             b = expensesItems[++i].value;
     
         if ((typeof(a)) != null && (typeof(b)) != null && a != '' && b != '' && a.length < 50){
-                console.log("done");
                 appData.expenses[a] = b;
                 sum += +b;
         }   else {
-            console.log("Bad result");
             i--;
         }
     } 
@@ -72,8 +77,6 @@ optionalExpensesBtn.addEventListener('click', function(){
 
 countBtn.addEventListener('click', function(){
     if(appData.budget != undefined){
-        console.log(+appData.budget);
-        console.log(+expensesValue.textContent);
         appData.moneyPerDay = ((+appData.budget - +expensesValue.textContent) / 30).toFixed(); 
         dayBudgetValue.textContent = appData.moneyPerDay;
 
