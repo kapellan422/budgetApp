@@ -1,18 +1,18 @@
-let btnStartCalc = document.querySelector('#start'),
+let startBtn = document.querySelector('#start'),
 
     budgetValue = document.querySelector('.budget-value'),
     dayBudgetValue = document.querySelector('.daybudget-value'),
     levelValue = document.querySelector('.level-value'),
     expensesValue = document.querySelector('.expenses-value'),
-    optExpensesValue = document.querySelector('.optionalexpenses-value'),
+    optionalExpensesValue = document.querySelector('.optionalexpenses-value'),
     incomeValue = document.querySelector('.income-value'),
     monthSavingsValue = document.querySelector('.monthsavings-value'),
     yearSavingsValue = document.querySelector('.yearsavings-value'),
 
     expensesItems = document.querySelectorAll('.expenses-item'),
 
+    expensesBtn = document.getElementsByTagName('button')[0],
     optionalExpensesBtn = document.getElementsByTagName('button')[1],
-    countBtn = document.getElementsByTagName('button')[2],
 
     optionalExpensesItems = document.querySelectorAll('.optionalexpenses-item'),
 
@@ -20,19 +20,57 @@ let btnStartCalc = document.querySelector('#start'),
     checkSavings = document.querySelector('#savings'),
     chooseSum = document.querySelector('.choose-sum'),
     choosePercent = document.querySelector('.choose-percent'),
-    year = document.querySelector('.year-value'),
-    month = document.querySelector('.month-value'),
-    day =  document.querySelector('.day-value');
+    yearValue = document.querySelector('.year-value'),
+    monthValue = document.querySelector('.month-value'),
+    dayValue =  document.querySelector('.day-value');
 
 
 let money, time;
 function start() {
-    money = +prompt("Ваш бюджет на месяц?", "");
+    
+}
+
+startBtn.addEventListener('click', function(){
     time = prompt("Введите дату в формате YYYY-MM-DD", "");
+    money = +prompt("Ваш бюджет на месяц?", "");
+
     while(isNaN(money) || money == '' || money == null) {
         money = +prompt("Ваш бюджет на месяц?", "");
     }
-}
+    appData.budget = money;
+    appData.timeData = time;
+    budgetValue.textContent = money.toFixed();
+    yearValue.value = new Date(Date.parse(time)).getFullYear();
+    monthValue.value =  new Date(Date.parse(time)).getMonth() + 1;
+    dayValue.value = new Date(Date.parse(time)).getDate();
+});
+
+expensesBtn.addEventListener('click', function(){
+    let sum = 0;
+
+    for (let i = 0; i < expensesItems.length; i++) {
+        let a = expensesItems[i].value,
+            b = expensesItems[++i].value;
+    
+        if ((typeof(a)) != null && (typeof(b)) != null && a != '' && b != '' && a.length < 50){
+                console.log("done");
+                appData.expenses[a] = b;
+                sum += +b;
+        }   else {
+            console.log("Bad result");
+            i--;
+        }
+    } 
+    expensesValue.textContent = sum;
+});
+
+optionalExpensesBtn.addEventListener('click', function(){
+    for (let i = 0; i < optionalExpensesItems.length; i++) {
+        let opt = optionalExpensesItems[i].value;
+        appData.optionalExpenses[i] = opt;
+        optionalExpensesValue.textContent += appData.optionalExpenses[i] + ', ';
+    }
+});
 
 let appData = {
     budget: money,
@@ -42,19 +80,7 @@ let appData = {
     income: [],
     savings: true,
     chooseExpenses: function() {
-        for (let i = 0; i < 2; i++) {
-            let a = prompt("Введите обязательную статью расходов в этом месяце", ''),
-                b = prompt("Во сколько обойдется?", '');
         
-            if ((typeof(a)) === 'string' && (typeof(a)) != null && (typeof(b)) != null
-                && a != '' && b != '' && a.length < 50){
-                    console.log("done");
-                    appData.expenses[a] = b;
-            }   else {
-                console.log("Bad result");
-                i--;
-            }
-        }
     },
     detectDayBudget: function() {
         appData.moneyPerDay = (appData.budget / 30).toFixed();
@@ -81,10 +107,7 @@ let appData = {
         }
     },
     chooseOptExpenses() {
-        for (let i=1; i < 3; i++) {
-            let opt = prompt("Статья необязательных расходов?", "");
-            appData.optionalExpenses[i] = opt;
-        }
+        
     },
     chooseIncome: function() {
         let items = "";
@@ -110,7 +133,7 @@ let appData = {
         arr.forEach(element => console.log(element));
     },
     displayObject: function(obj) {
-        console.log("Наша программа включается в себя данные: ");
+        console.log("Наша программа включает в себя данные: ");
         for (let key in obj) {
             console.log("key " + key + " value " + obj[key]);
         }
